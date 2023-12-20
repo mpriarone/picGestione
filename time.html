@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Javascript Time Picker Demo</title>
+
+    <!-- (A) LOAD CSS & JS -->
+    <link href="css/timepick.css" rel="stylesheet">
+    <script src="timepick.js"></script>
+  </head>
+  <body>
+    <!-- (B) HTML FIELD -->
+    <input type="text" id="demoB">
+
+    <!-- (C) ATTACH -->
+    <script>
+    tp.attach({
+      target: document.getElementById("demoB"),
+      "24": true, // 24 hours
+      after : time => alert(time) // run function after select
+    });
+    </script>
+  </body>
+</html>

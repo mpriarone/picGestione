@@ -1,0 +1,67 @@
+/* (A) WRAPPER */
+#tp-wrap * {
+  box-sizing: border-box;
+}
+#tp-wrap *::selection {
+  background: transparent;
+}
+#tp-wrap {
+  width: 100vw; height: 100vh;
+  display: block;
+  position: relative; top: 0; left: 0; z-index: 999;
+  background: rgba(0, 0, 0, 0.8);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s;
+}
+#tp-wrap.show {
+  opacity: 1; visibility: visible;
+}
+
+/* (B) BOX */
+#tp-box {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  height: 30vh;
+  display: flex; flex-wrap: wrap;
+  border: 1px solid #000;
+  background: #808080;
+  align-items: center;
+}
+
+/* (C) HR/MIN/AM/PM */
+.tp-cell {
+  width: 50%; padding: 0 15px;
+  text-align: center;
+}
+.tp-label
+{
+    padding: 5px 0;
+    color: rgb(0, 0, 0);
+    font-size: 1.3em; 
+}
+.tp-up, .tp-down {
+  padding: 6px 0;
+  color: rgb(2, 101, 79);
+  font-size: 32px; font-weight: 700;
+  cursor: pointer;
+}
+.tp-val {
+  width: 100%; padding: 10px 0;
+  text-align: center; font-size: 22px;
+  background: #fff;
+}
+
+/* (D) CLOSE & SET BUTTON */
+#tp-close, #tp-set {
+  width: 50%; padding: 15px 0; border: 0;
+  font-size: 18px; font-weight: 700;
+  color: #fff; cursor: pointer;
+}
+#tp-close { background: #951a1a; }
+#tp-set { background: rgb(2, 101, 79); }
+
+/* (E) 24-HOUR MODIFY */
+#tp-wrap.tp-24 #tp-ap { display: none; }
+#tp-wrap.tp-24 #tp-hr, #tp-wrap.tp-24 #tp-min { width: 50%; }

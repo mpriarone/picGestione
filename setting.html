@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ArgoPanoptes - Setting</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- <link rel="stylesheet" type="text/css" href="css/APSStyle.css"> --> 
+     
+    <script type="text/javascript" src="/Framework/APS.js"></script>
+    <script type="text/javascript" src="/Framework/APSFunctions.js"></script>
+
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#000000">
+</head>
+
+<body onload="APSInit()"> <!-- partial:index.partial.html -->
+    <script>
+        function fill_list(data,label,list)
+        {
+            data[label].forEach((item)=>{
+                            let li = document.createElement("li");
+                            li.innerText = item['ID'] + " " + item['Value'];
+                            li.id=item['ID'];
+                            if (item['Value']=="OFFLINE")
+                             li.style.backgroundColor = "darkred";
+                            else
+                             li.style.backgroundColor = "grey";
+                        //  li.addEventListener("click",configurationOnClick);
+                            list.appendChild(li);
+                            });  
+        }
+        function empty_lists(list)
+        {
+            list.forEach((item)=>{                   
+                while( item.firstChild ){
+                    item.removeChild( item.firstChild );
+                    }                   
+                });   
+        }
+        /*
+        function empty_list(list)
+        {            
+                while( list.firstChild ){
+                    list.removeChild( list.firstChild );
+                    }                   
+  
+        }
+        */
+        function set_btn_visibility(data,btn_list)
+        {
+            btn_list.forEach((item)=>{  
+                let btn_div = document.getElementById(item['btn']);                 
+                   if (data[item['list']].length === 0 )
+                        btn_div.style.display="none";
+                   else
+                        btn_div.style.display="flex";      
+                }); 
+
+        }
+        function login() 
+        {
+            var username = document.getElementById("txtUsername").value;
+            var password = document.getElementById("txtPassword").value;
+            console.log(username);
+            console.log(password);
+            CheckLogin(username,password,function(answer)
+            {
+                 if (answer != "KO")
+                 {
+
+                    let menuDIV = document.getElementById("menu_div");
+                    menuDIV.style.display="block";
+
+                    let loginDIV = document.getElementById("login_div");
+                    loginDIV.style.display="none";
+
+                    DownloadSwitchValue(answer,function(answer)
+                    {
+                        let data = JSON.parse(answer);
+
+                        let btn_list=[{btn:'btn_br',list:'BreakerList'},{btn:'btn_ip',list:'IPList'},{btn:'btn_kn',list:'KNXList'},{btn:'btn_lu',list:'LutronList'}]
+                        set_btn_visibility(data,btn_list);
+
+                        let switch_list = document.getElementById("switchList");
+                        let ip_list = document.getElementById("ipList");
+                        let knx_list = document.getElementById("knxList");
+                        let lutron_list = document.getElementById("lutronList");
+
+                        let lists = [switch_list,ip_list,knx_list,lutron_list];
+                        empty_lists(lists);
+
+                        let date=data['Date'];
+                        let d = document.getElementById("date");
+                        d.innerHTML=date;
+                        //console.log(data['BreakerList']);    
+                      
+                        data['BreakerList'].forEach((item)=>{
+                            //console.log(item);
+                        
+                            let li = document.createElement("li");
+                            li.innerText = item['ID'] + " " + item['Value'];
+                            li.id=item['ID'];
+                            if (item['Value']=="ON")
+                            li.style.backgroundColor = "darkred";
+                            else
+                            li.style.backgroundColor = "grey";
+                        //  li.addEventListener("click",configurationOnClick);
+                            switch_list.appendChild(li);
+                        });
+
+                        fill_list(data,'IPList',ip_list);
+                        fill_list(data,'KNXList',knx_list);
+                        fill_list(data,'LutronList',lutron_list);
+                    });
+                }  
+            });
+    }
+    /*
+    function switchListBack(id)
+    {
+        let switchedDIV = document.getElementById("switchedDIV");
+        switchedDIV.style.display="none";
+        let loginDIV = document.getElementById("login_div");
+        loginDIV.style.display="flex";
+
+        //empty list
+      
+        let list = document.getElementById("switchList");
+        while( list.firstChild ){
+         list.removeChild( list.firstChild );
+        }
+        
+    } 
+    */
+    function listBack(from_div,to_div,list)
+    {
+                //empty list
+        /*        
+        while( list.firstChild ){
+         list.removeChild( list.firstChild );
+        }
+*/
+
+        let switchedDIV = document.getElementById(from_div);
+        switchedDIV.style.display="none";
+        let loginDIV = document.getElementById(to_div);
+        loginDIV.style.display="flex";
+    } 
+    function show(id)
+    {   
+        let menu_div = document.getElementById("menu_div");
+        menu_div.style.display="none";
+
+        let page_div = document.getElementById(id);
+        page_div.style.display="flex";
+        
+
+        //empty list
+        /*
+        let list = document.getElementById("switchList");
+        while( list.firstChild ){
+         list.removeChild( list.firstChild );
+        }
+        */
+    } 
+    function back_to_menu(from_div,to_div)
+    {   
+        let from = document.getElementById(from_div);
+        from.style.display="none";
+
+        let to = document.getElementById(to_div);
+        to.style.display="flex";
+        
+
+        //empty list
+        /*
+        let list = document.getElementById("switchList");
+        while( list.firstChild ){
+         list.removeChild( list.firstChild );
+        }
+        */
+    } 
+    </script>
+
+<section>
+    <div class = "list"  id ="menu_div" style="display:none;">
+        <div class="content">
+                <h2>Main Menu</h2>
+                <h3 id="date"></h3>
+            <div class="form">
+                <div class="buttonBox">
+                    <input type="submit" id ="btn_br" onclick="show('switchedDIV')" value="Breaker">
+                </div>
+                <div class="buttonBox">
+                    <input type="submit" id ="btn_ip" onclick="show('ip_div')" value="IP">
+                </div>
+                <div class="buttonBox">
+                    <input type="submit" id ="btn_kn" onclick="show('knx_div')" value="KNX">
+                </div>    
+                <div class="buttonBox">               
+                    <input type="submit" id ="btn_lu" onclick="show('lutron_div')" value="Lutron">  
+                </div>
+                <div class="inputBox">
+                    <input type="submit"  onclick="back_to_menu('menu_div','login_div')" value="Logout">
+                </div> 
+            </div>
+        </div>
+    </div>  
+</section>
+
+<section>
+<div class = "list"  id ="ip_div" style="display:none;">
+    <div class="content">
+            <h2>IP List</h2>
+            
+        <div class="form">
+            <div class="iplist">
+                <ul id="ipList"></ul>
+            </div>
+            <div class="inputBox">
+                <input type="submit" onclick="listBack('ip_div','menu_div',ipList)" value="Back">
+            </div>
+        </div>
+    </div>
+</div>  
+</section>
+<section>
+    <div class = "list"  id ="knx_div" style="display:none;">
+        <div class="content">
+                <h2>KNX List</h2>
+               
+            <div class="form">
+                <div class="knxlist">
+                    <ul id="knxList"></ul>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" onclick="listBack('knx_div','menu_div',knxList)" value="Back">
+                </div>
+            </div>
+        </div>
+    </div>  
+</section>
+<section>
+    <div class = "list"  id ="lutron_div" style="display:none;">
+        <div class="content">
+                <h2>Lutron List</h2>
+                
+            <div class="form">
+                <div class="lutronlist">
+                    <ul id="lutronList"></ul>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" onclick="listBack('lutron_div','menu_div',lutronList)" value="Back">
+                </div>
+            </div>
+        </div>
+    </div>  
+</section>
+<section>
+        <div class = "list"  id ="switchedDIV" style="display:none;">
+            <div class="content">
+                    <h2>Breaker List</h2>
+                   
+                <div class="form">
+                    <div class="switchlist">
+                        <ul id="switchList"></ul>
+                    </div>
+                    <div class="inputBox">
+                        <input type="submit" onclick="listBack('switchedDIV','menu_div',switchList)" value="Back">
+                    </div>
+                </div>
+            </div>
+        </div>  
+</section>
+
+<section>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span>
+
+        <div class="signin"  id ="login_div">
+            <div class="content">
+                <div class="title">
+                    <h2>ArgoPanoptes</h2>
+                    <h2>Setting</h2>
+                    <h3>Sign In</h3>
+                 </div>
+                <div class="form">
+                    <div class="inputBox">
+                        <input type="text" id="txtUsername" required> <i>Username</i>
+                    </div>
+                    <div class="inputBox">
+                        <input type="password" id="txtPassword" required> <i>Password</i>
+                    </div>
+                    <div class="inputBox">
+                        <input type="submit" onclick="login()" value="Login">
+                    </div>
+                </div>
+            </div>
+        </div>
+</section> <!-- partial -->
+</body>
+</html>

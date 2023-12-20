@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lavorazioni In Cantiere</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/flatpickr.css">
+
+    <!-- Timepicker -->
+    <link rel="stylesheet" href="css/timepick.css">
+    <script src="timepick.js"></script>
+
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css" href="css/APSStyle.css"> -->
+
+    <script type="text/javascript" src="/Framework/APS.js"></script>
+    <script type="text/javascript" src="/Framework/APSFunctions.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
+
+
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#000000">
+</head>
+
+<body onload="APSInit()"> <!-- partial:index.partial.html -->
+    <script>
+        var jobID;
+        var userID;
+        var jobDate;
+        var activityID;
+        var service_time; //numerical value
+        var e_service_time; //numerical value
+        var e_service_ticks; //numerical value
+        var edit_service_time; //input of the timepicker object
+
+        function fill_list(data, label, list) {
+            data[label].forEach((item) => {
+                let li = document.createElement("li");
+                li.innerText = item['ID'] + " " + item['Value'];
+                li.id = item['ID'];
+                if (item['Value'] == "OFFLINE")
+                    li.style.backgroundColor = "darkred";
+                else
+                    li.style.backgroundColor = "grey";
+                //  li.addEventListener("click",configurationOnClick);
+                list.appendChild(li);
+            });
+        }
+        function empty_lists(list) {
+            list.forEach((item) => {
+                while (item.firstChild) {
+                    item.removeChild(item.firstChild);
+                }
+            });
+        }
+        function empty_list(list) {
+            while (list.firstChild) {
+                list.removeChild(list.firstChild);
+            }
+        }
+        function set_btn_visibility(data, btn_list) {
+            btn_list.forEach((item) => {
+                let btn_div = document.getElementById(item['btn']);
+                if (data[item['list']].length === 0)
+                    btn_div.style.display = "none";
+                else
+                    btn_div.style.display = "flex";
+            });
+
+        }
+        function OnClickJobsItem(jobCode,jobID) {
+            console.log(jobID);
+            this.jobID = jobID;
+            let service_job = document.getElementById('add_activity_job');
+            service_job.innerHTML=jobCode;
+            let service_description = document.getElementById('service_description');
+            service_description.value = 'Descrizione';
+
+            let addDIV = document.getElementById('add_div');
+            addDIV.style.display = "none";
+
+            let addHourDIV = document.getElementById('add_hour_div');
+            addHourDIV.style.display = "flex";
+        }
+
+        function SendAndBack() {
+            let service_calendar = document.querySelector("#calendar")._flatpickr;
+            let service_date = formatDate(service_calendar.selectedDates[0]);
+            let service_description = document.getElementById('service_description');
+            console.log(this.userID + " " + this.jobID);
+            SendTimeServicePIC(this.userID, this.jobID, service_date, service_time, service_description.value);
+            jobDateFormat = formatDate(this.jobDate);
+            CheckJobsInDay(jobDateFormat);
+            goTo('add_hour_div', 'date_div');
+        }
+        function EditSendAndBack() {
+            let service_calendar = document.getElementById("e_calendar")._flatpickr;
+            let service_date = formatDate(service_calendar.selectedDates[0]);
+            let service_description = document.getElementById('e_service_description');
+            console.log(this.userID + " " + this.activityID);
+
+            EditActivityPIC(this.userID, this.jobID,this.activityID, service_date, this.e_service_ticks, this.e_service_time, service_description.value);
+           // jobDateFormat = formatDate(this.jobDate);
+           // CheckJobsInDay(jobDateFormat);
+            goTo('add_hour_div', 'date_div');
+        }
+
+       function convertDate(date)
+       {
+        let date_yyyy_mm_dd=date.split("/").reverse().join("-");
+        return date_yyyy_mm_dd;
+       }
+
+        function formatDate(date = new Date()) {
+            const year = date.toLocaleString('default', { year: 'numeric' });
+            const month = date.toLocaleString('default', {
+                month: '2-digit',
+            });
+            const day = date.toLocaleString('default', { day: '2-digit' });
+
+            return [day, month, year].join('/');
+        }
+        const editActivity = () => {
+            const btn = event.target;
+            const id = btn.id;
+            const label = btn.name
+            const jobCode=label.substring(0,20);
+            DownloadActivityPIC(id, function (answer) {
+                let data = JSON.parse(answer);
+                this.activityID = data['ID'];
+                this.jobID = data['jobID'];
+                this.e_service_ticks = data['datetick'];
+                let service_job = document.getElementById('edit_activity_job');
+                service_job.innerHTML=jobCode;
+
+                flatpickr('#e_calendar', {
+                        "locale": "it",
+                        "dateFormat": "d/m/Y",
+                        disableMobile: "true",
+                        defaultDate: new Date(convertDate(data['date'])),
+                        onChange: function (selectedDates, dateStr, instance) {
+                            CheckJobsInDay(dateStr);
+                        }});
+
+                this.e_service_time = data['hour']; //value to store if not modified by user
+                service_time=this.e_service_time/100;
+
+                var n = new Date(0,0);
+                n.setSeconds(+service_time * 60 * 60);
+                let service_time_hm=n.toTimeString().slice(0, 5);
+             
+                let edit_service_time = document.getElementById("e_service_time");
+                edit_service_time.value=service_time_hm
+
+                let service_description = document.getElementById('e_service_description');
+                service_description.value = data['description'];
+
+
+
+            });
+            goTo('add_div', 'edit_activity_div');
+
+        }
+        function EditDelete() {
+            EditDeletePIC(this.userID, this.activityID, function (answer) {
+            });
+            jobDateFormat = formatDate(this.jobDate);
+            CheckJobsInDay(jobDateFormat);
+            goTo('edit_activity_div', 'date_div');
+        }
+        function renderTable(item) {
+            let result = '<tr>';
+            result += '<td><b>' + item.Label + "</b><br>" + item.Hour/100 + '</td>';
+            result += '<td><button class="editButton" id="' + item.ID + '" name="'+ item.Label+'" onclick="editActivity()">Modifica</button></td>';
+            result += '</tr>';
+            return result;
+        }
+        function CheckJobsInDay(date) {
+            CheckJobsInDayPIC(this.userID, date, function (answer) {
+                let jobs_in_day = document.getElementById("jobs_in_day_div");
+
+                if (answer != "none") {
+                    let jobs_in_day_list = document.getElementById("jobsInDayList");
+
+                    empty_list(jobs_in_day_list);
+
+                    jobs_in_day.style.display = "flex";
+
+                    let row_index = 0;
+                    let data = JSON.parse(answer);
+                    data.forEach((item) => {
+                        let li = document.createElement("li");
+                        li.innerText = item.Label
+                        li.innerHTML = renderTable(item);
+                        li.id = item.Label;
+                        if (row_index % 2 == 0)
+                            li.style.backgroundColor = "#b1c3b1";
+                        else
+                            li.style.backgroundColor = "#e4f7e4";
+                        row_index = row_index + 1;
+                        jobs_in_day_list.appendChild(li);
+                    });
+                }
+                else
+                    jobs_in_day.style.display = "none";
+            });
+        }
+
+        function login() {
+            var username = document.getElementById("txtUsername").value;
+            var password = document.getElementById("txtPassword").value;
+
+            CheckLoginPIC(username, password, function (answer) {
+                if (answer != "KO") {
+                    let data = JSON.parse(answer);
+                    this.userID = data['ID'];
+                    this.jobDate = new Date;
+
+
+                    flatpickr('#calendar', {
+                        "locale": "it",
+                        "dateFormat": "d/m/Y",
+                        disableMobile: "true",
+                        defaultDate: this.jobDate,
+                        onChange: function (selectedDates, dateStr, instance) {
+                            CheckJobsInDay(dateStr);
+                        }
+                    });
+                    jobDateFormat = formatDate(this.jobDate);
+                    CheckJobsInDay(jobDateFormat);
+
+                    let menuDIV = document.getElementById("date_div");
+                    menuDIV.style.display = "flex";
+
+                    let loginDIV = document.getElementById("login_div");
+                    loginDIV.style.display = "none";
+
+                    DownloadJobsPIC(answer, function (answer) {
+                        let data = JSON.parse(answer);
+                        let commesse_list = document.getElementById("commesseList");
+                        let row_index = 0;
+                        data['jobList'].forEach((item) => {
+                            //console.log(item);
+
+                            let li = document.createElement("li");
+                            li.innerText = item['Code'] + " " + item['Label'];
+                            li.innerHTML = "<b>" + item['Code'] + "</b><br>" + item['Label'];
+                            li.id = item['jobID'];
+                            if (row_index % 2 == 0)
+                                li.style.backgroundColor = "#c1d3c1";
+
+                            row_index = row_index + 1;
+
+                            li.addEventListener("click",
+                                function (e) {
+                                    e.preventDefault();
+                                    OnClickJobsItem(item['Code'],item['jobID']);
+                                },
+                                false,
+                            );
+                            commesse_list.appendChild(li);
+                        });
+                    });
+                }
+            });
+        }
+        function goTo(from_div, to_div) {
+            let switchedDIV = document.getElementById(from_div);
+            switchedDIV.style.display = "none";
+            let loginDIV = document.getElementById(to_div);
+            loginDIV.style.display = "flex";
+        }
+        function show(id) {
+            let page_div = document.getElementById(id);
+            page_div.style.display = "flex";
+
+            //empty list
+            /*
+            let list = document.getElementById("switchList");
+            while( list.firstChild ){
+             list.removeChild( list.firstChild );
+            }
+            */
+        }
+        function back_to_menu(from_div, to_div) {
+            let from = document.getElementById(from_div);
+            from.style.display = "none";
+
+            let to = document.getElementById(to_div);
+            to.style.display = "flex";
+
+
+            //empty list
+            /*
+            let list = document.getElementById("switchList");
+            while( list.firstChild ){
+             list.removeChild( list.firstChild );
+            }
+            */
+        } 
+    </script>
+
+    <section>
+        <div class="list" id="date_div" style="display:none;">
+            <div class="content">
+                <h2>Scegli la data</h2>
+                <div class="form">
+                    <div class="date_group">
+                        <label class="input-label">Data</label>
+                        <input type="text" id="calendar">
+                    </div>
+                    <div class="commesselist" id="jobs_in_day_div" style="display:none;">
+                        <ul id="jobsInDayList"></ul>
+                    </div>
+                    <div class="buttonBox">
+                        <input type="submit" id="btn_add" onclick="show('add_div')" value="Aggiungi">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="list" id="add_hour_div" style="display:none;">
+            <div class="content">
+                <div class="title">
+                 <h2>Aggiungi Tempo</h2>
+                 <h3 id="add_activity_job"></h3>
+                </div>
+                <div class="form">
+                    <div class="service_time_div">
+                        <label for="service_time">Immetti Ore:</label> 
+
+                        <input type="text" name="service_time" id="service_time"></input>
+                        <script>
+                            tp.attach({
+                                target: document.getElementById("service_time"),
+                                after : time => {service_time = time*100}
+                            });
+                        </script>
+                    </div>
+                    <div class="service_description_div">
+                        <label for="service_description">Descrizione:
+                        <textarea id="service_description" name="service_description"
+                            placeholder="Descrizione" value="Descrizione" required rows="5" cols="40"> </textarea>
+                        </label>
+                    </div>
+                    <div class="buttonBox">
+                        <input type="submit" id="btn_ip" onclick="SendAndBack()" value="Invia">
+                    </div>
+                    <div class="buttonBox">
+                        <input type="submit" id="btn_ip" onclick="goTo('edit_activity_div','add_div')" value="Annulla">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="list" id="edit_activity_div" style="display:none;">
+            <div class="content">
+                <div class="title">
+                 <h2>Modifica Attività</h2>
+                 <h3 id="edit_activity_job"></h3>
+                </div> 
+                <div class="form">
+                    <div class="date_group">
+                        <label class="input-label">Data</label>
+                        <input type="text" id="e_calendar">
+                    </div>
+                    <div class="service_time_div">
+                        <label for="service_time">Immetti Ore:</label> 
+                        <input type="text" name="service_time" id="e_service_time"></input>
+                        <script>
+                            tp.attach({
+                                target: edit_service_time = document.getElementById("e_service_time"),
+                                after : time => {this.e_service_time = time*100}
+                            });
+                            tp.h
+                        </script>
+
+                    </div>
+                    <div class="service_description_div">
+                        <label for="service_description">Descrizione:
+                        <textarea id="e_service_description" name="e_service_description"
+                            placeholder="Descrizione" value="Descrizione" required rows="5" cols="40"></textarea>
+                        </label>
+                    </div>
+                    <div class="buttonBox">
+                        <input type="submit" id="btn_ip" onclick="EditDelete()" value="Elimina">
+                    </div>
+                    <div class="buttonBox">
+                        <input type="submit" id="btn_ip" onclick="EditSendAndBack()" value="Salva">
+                    </div>
+                    <div class="buttonBox">
+                        <input type="submit" id="btn_ip" onclick="goTo('edit_activity_div','date_div')" value="Annulla">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="list" id="add_div" style="display:none;">
+            <div class="content">
+                <h2>Scegli Commessa</h2>
+
+                <div class="form">
+                    <div class="commesselist">
+                        <ul id="commesseList"></ul>
+                    </div>
+                    <div class="inputBox">
+                        <input type="submit" onclick="goTo('add_div','date_div')" value="Back">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+        <span></span> <span></span> <span></span> <span></span> <span></span>
+
+        <div class="signin" id="login_div">
+            <div class="content">
+                <div class="title">
+                    <h2>Lavorazioni In Cantiere</h2>
+                </div>
+                <div class="form">
+                    <div class="inputBox">
+                        <input type="text" id="txtUsername" required> <i>Utente</i>
+                    </div>
+                    <div class="inputBox">
+                        <input type="password" id="txtPassword" required> <i>Password</i>
+                    </div>
+                    <div class="inputBox">
+                        <input type="submit" onclick="login()" value="Entra">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> <!-- partial -->
+</body>
+
+</html>

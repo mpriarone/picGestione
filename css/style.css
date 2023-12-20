@@ -1,0 +1,745 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Quicksand', sans-serif;
+}
+body 
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #000;
+}
+section 
+{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+section::before 
+{
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#000,rgb(2, 101, 79),#000);
+  animation: animate 5s linear infinite;
+}
+@keyframes animate 
+{
+  0%
+  {
+    transform: translateY(-100%);
+  }
+  100%
+  {
+    transform: translateY(100%);
+  }
+}
+section span 
+{
+  position: relative;
+  display: block;
+  width: calc(6.25vw - 2px);
+  height: calc(6.25vw - 2px);
+  background: #181818;
+  z-index: 2;
+  transition: 1.5s;
+}
+section span:hover 
+{
+  background: rgb(2, 101, 79);
+  transition: 0s;
+}
+
+
+section .signin .content 
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+}
+section .signin .content .title
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+section .signin .content h2
+{
+  font-size: 2em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  gap: 5px;
+  text-align: center;
+}
+section .signin .content .title h2
+{
+  font-size: 2em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  gap: 5px;
+}
+section .signin .content .form 
+{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+section .signin .content .form .inputBox
+{
+  position: relative;
+  width: 100%;
+}
+section .signin .content .form .inputBox input 
+{
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+}
+section .signin .content .form .inputBox i 
+{
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #aaa;
+  transition: 0.5s;
+  pointer-events: none;
+}
+.signin .content .form .inputBox input:focus ~ i,
+.signin .content .form .inputBox input:valid ~ i
+{
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #fff;
+}
+.signin .content .form .links 
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.signin .content .form .links a 
+{
+  color: #fff;
+  text-decoration: none;
+}
+.signin .content .form .links a:nth-child(2)
+{
+  color: rgb(2, 101, 79);
+  font-weight: 600;
+}
+.signin .content .form .inputBox input[type="submit"] 
+{
+  padding: 10px;
+  background: rgb(2, 101, 79);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+input[type="submit"]:active
+{
+  opacity: 0.6;
+}
+
+/* Service Time */
+td{
+  padding-left: 0vw;
+  width: 30vw;
+}
+
+.service_time_div table {
+  margin: 0 auto; 
+}
+
+.service_time_div {
+  background-color: #eee;
+  padding-left: 0px;
+  width:80vw;
+  height: 5vh;
+}
+.service_time {
+  width:10vw;
+  height: 10vh;
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #eee;
+  z-index: 10;
+}
+
+/* Hide the browser's default radio button */
+.service_time input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  padding-left: 10vw;
+}
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.service_time:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.service_time input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.service_time input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.service_time .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+.service_description_div label
+{
+  font-size: 1em;
+  display: block;
+  position: relative;
+  padding-left: 2px;
+  margin-bottom: 12px;
+  cursor: pointer;
+   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #eee;
+  width: 100%;
+  padding-top: 2px;
+  word-break: break-all;
+}
+.service_description_div textarea
+{
+  font-size: 1.5em;
+  position: relative;
+  cursor: pointer;
+   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #eee;
+  width: 100%;
+  height: 20vh;
+  word-break: break-all;
+  border: none;
+  outline: none;
+}
+
+@media (max-width: 900px)
+{
+  section span 
+  {
+    width: calc(10vw - 2px);
+    height: calc(10vw - 2px);
+  }
+}
+@media (max-width: 600px)
+{
+  section span 
+  {
+    width: calc(20vw - 2px);
+    height: calc(20vw - 2px);
+  }
+}
+/* .list*/
+ul {
+  list-style: none;
+}
+/* flatpickr date picker start
+.date_group {
+  position: relative;
+  margin: 30px 20px 50px;
+}
+flatpickr date picker end*/
+
+ .editButton
+ {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   
+   position: relative;
+   width: 100%;
+   background: rgb(2, 101, 79);
+   border: none;
+   outline: none;
+   padding: 25px 10px 7.5px;
+   border-radius: 4px;
+   color: #000;
+   font-weight: 600;
+   font-size: 1em;
+   padding: 10px;
+ }
+
+@media (pointer: coarse)  {
+	/* mobile device */
+  section .signin
+{
+  position: absolute;
+  width: 80vw;
+  background: #222;  
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  border-radius: 4px;
+  box-shadow: 0 15px 35px rgba(0,0,0,9);
+}
+section .list
+{
+  position: absolute;
+  width: 90vw;
+  height: 90vh;
+  background: #222;  
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 15px 35px rgba(0,0,0,9);
+}
+
+section .list .content 
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+}
+section .list .content h2
+{
+  font-size: 1.5em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  align-content: center;
+  gap: 2px;
+}
+section .list .content h3
+{
+  font-size: 1.3em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  text-align: center;
+}
+section .list .content .form 
+{
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.switchlist, .iplist, .knxlist, .lutronlist{
+  font-size: .7em;
+  margin:4px, 4px;
+  padding:4px;
+  width: 80vw;
+  height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+}
+.commesselist {
+  background: #d1e3d1; 
+  font-size: 1em;
+  margin:8px, 8px;
+  padding:8px;
+  width: 80vw;
+  height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+}
+ul li {
+  padding-left: 2px;
+}
+
+section .list .content .form .inputBox
+{
+  position: relative;
+  width: 100%;
+}
+
+section .list .content .form .inputBox input 
+{
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 15px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+}
+section .list .content .form .inputBox i 
+{
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #aaa;
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+.list .content .form .inputBox input:focus ~ i,
+.list .content .form .inputBox input:valid ~ i
+{
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #fff;
+}
+.list .content .form .links 
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.list .content .form .links a 
+{
+  color: #fff;
+  text-decoration: none;
+}
+.list .content .form .links a:nth-child(2)
+{
+  color: rgb(2, 101, 79);
+  font-weight: 600;
+}
+
+.list .content .form .inputBox input[type="submit"] 
+{
+  padding: 10px;
+  background: rgb(2, 101, 79);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+section .list .content .form .buttonBox
+{
+  position: relative;
+  width: 100%;
+}
+section .list .content .form .buttonBox input 
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+  padding: 25px;
+}
+section .list .content .form .buttonBox i 
+{
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #aaa;
+  transition: 0.5s;
+  pointer-events: none;
+}
+.list .content .form .buttonBox input[type="submit"] 
+{
+  padding: 10px;
+  background: rgb(2, 101, 79);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.list .content .form .buttonBox input:focus ~ i,
+.list .content .form .buttonBox input:valid ~ i
+{
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #fff;
+}
+}
+
+@media (pointer: fine), (pointer: none) {
+	/* desktop */
+  section .list
+{
+  position: absolute;
+  width: 600px;
+  height: 95vh;
+  background: #222;  
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  border-radius: 4px;
+  box-shadow: 0 15px 35px rgba(0,0,0,9);
+}
+
+section .list .content 
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+section .list .content h2
+{
+  font-size: 2em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  text-align: center;
+  gap: 2px;
+}
+section .list .content .title h2
+{
+  font-size: 2em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  text-align: center;
+  gap: 2px;
+}
+
+section .list .content .title h3
+{
+  font-size: 1.8em;
+  color: rgb(2, 101, 79);
+  text-transform: uppercase;
+  align-content: center;
+}
+section .list .content .form 
+{
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.switchlist, .iplist, .knxlist, .lutronlist {
+  margin:4px, 4px;
+  padding:4px;
+  width: 500px;
+  height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+}
+.commesselist { 
+  font-size: .7em;
+  background: #d1e3d1; 
+  margin:4px, 4px;
+  padding:4px;
+  width: 500px;
+  height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+}
+ul li {
+  padding-left: 2px;
+}
+section .list .content .form .inputBox
+{
+  position: relative;
+  width: 100%;
+}
+section .list .content .form .inputBox input 
+{
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+  margin-bottom: auto;
+}
+section .list .content .form .inputBox i 
+{
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #aaa;
+  transition: 0.5s;
+  pointer-events: none;
+}
+.list .content .form .inputBox input:focus ~ i,
+.list .content .form .inputBox input:valid ~ i
+{
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #fff;
+}
+/*
+.list .content .form .links 
+{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.list .content .form .links a 
+{
+  color: #fff;
+  text-decoration: none;
+}
+.list .content .form .links a:nth-child(2)
+{
+  color: rgb(2, 101, 79);
+  font-weight: 600;
+}
+*/
+.list .content .form .inputBox input[type="submit"] 
+{
+  padding: 10px;
+  background: rgb(2, 101, 79);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+section .list .content .form .buttonBox
+{
+  position: relative;
+  width: 100%;
+}
+section .list .content .form .buttonBox input 
+{
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+  padding: 25px;
+}
+section .list .content .form .buttonBox i 
+{
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #aaa;
+  transition: 0.5s;
+  pointer-events: none;
+}
+.list .content .form .buttonBox input[type="submit"] 
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px;
+  background: rgb(2, 101, 79);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.list .content .form .buttonBox input:focus ~ i,
+.list .content .form .buttonBox input:valid ~ i
+{
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #fff;
+}
+
+}
+
+@media (pointer: fine) and (any-pointer: coarse) {
+	/* touch desktop */
+}
