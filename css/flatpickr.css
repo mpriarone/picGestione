@@ -2,20 +2,39 @@
 
 .date_group {
     position: relative;
-    margin: 30px 20px 50px;
+    margin: 10px 0px 10px;
 }
 
+@media (pointer: coarse)  {
+/* mobile device */
 .date_group input {
     color: #000000;
     font-size: 2em;
     padding: 10px 10px 5px 5px;
     display: block;
-    width: 70vw;
+    width: 80vw;
     border: none;
     border-bottom: 1px solid #607D8B;
     text-align:center;
     align-items: center;
 }
+}
+
+@media (pointer: fine)  {
+/* desktop */
+.date_group input {
+    color: #000000;
+    font-size: 2em;
+    padding: 10px 10px 5px 5px;
+    display: block;
+    width: 60vw;
+    border: none;
+    border-bottom: 1px solid #607D8B;
+    text-align:center;
+    align-items: center;
+}
+}
+
 .date_group .input:focus {
     outline: none;
 }

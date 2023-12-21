@@ -183,11 +183,14 @@ td{
 }
 
 .service_time_div {
+  margin: 10px 0px 10px;
   background-color: #eee;
-  padding-left: 0px;
+  padding: 2px;
   width:80vw;
-  height: 5vh;
+  height: 9vh;
+  
 }
+
 .service_time {
   width:10vw;
   height: 10vh;
@@ -204,13 +207,20 @@ td{
   background-color: #eee;
   z-index: 10;
 }
+.service_time input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  padding-left: 0vw;
+}
+
 
 /* Hide the browser's default radio button */
 .service_time input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
-  padding-left: 10vw;
+  padding-left: 0vw;
 }
 /* Create a custom radio button */
 .checkmark {
@@ -309,14 +319,8 @@ td{
 ul {
   list-style: none;
 }
-/* flatpickr date picker start
-.date_group {
-  position: relative;
-  margin: 30px 20px 50px;
-}
-flatpickr date picker end*/
 
- .editButton
+.editButton
  {
    display: flex;
    justify-content: center;
@@ -420,7 +424,8 @@ section .list .content .form
   text-align:justify;
 }
 ul li {
-  padding-left: 2px;
+  padding-left: 1px;
+  width: 75vw;
 }
 
 section .list .content .form .inputBox
@@ -438,7 +443,7 @@ section .list .content .form .inputBox input
   outline: none;
   padding: 15px 10px 7.5px;
   border-radius: 4px;
-  color: #fff;
+  color: #aaa;
   font-weight: 500;
   font-size: 1em;
 }
@@ -536,16 +541,42 @@ section .list .content .form .buttonBox i
 {
   transform: translateY(-7.5px);
   font-size: 0.8em;
-  color: #fff;
+  color: #fffcfc;
 }
+  
+.service_time_input
+{
+  padding: 20px;
+  color: #000;
+  font-size: 1.8em;  
+  cursor: pointer;
+  width: 30vw;
+  height: 5vh;
+  margin: auto;
+  display: block;
+}
+    
 }
 
 @media (pointer: fine), (pointer: none) {
 	/* desktop */
+  section .signin
+  {
+    position: absolute;
+    width: 40vw;
+    background: #222;  
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 15px 35px rgba(0,0,0,9);
+  } 
   section .list
 {
   position: absolute;
-  width: 600px;
+  width: 70vw;
   height: 95vh;
   background: #222;  
   z-index: 1000;
@@ -599,6 +630,14 @@ section .list .content .form
   flex-direction: column;
   gap: 25px;
 }
+  
+ .service_time_div {
+  background-color: #eee;
+  padding-left: 0px;
+  width:60vw;
+  height: 8vh;
+ }
+  
 .switchlist, .iplist, .knxlist, .lutronlist {
   margin:4px, 4px;
   padding:4px;
@@ -613,15 +652,17 @@ section .list .content .form
   background: #d1e3d1; 
   margin:4px, 4px;
   padding:4px;
-  width: 500px;
+  width:  60vw;
   height: 90vh;
   overflow-x: hidden;
   overflow-y: auto;
   text-align:justify;
 }
 ul li {
-  padding-left: 2px;
+  width: 59vw;
+  font-size: 1.2em;
 }
+  
 section .list .content .form .inputBox
 {
   position: relative;
@@ -690,7 +731,7 @@ section .list .content .form .inputBox i
 section .list .content .form .buttonBox
 {
   position: relative;
-  width: 100%;
+  width: 60vw;
 }
 section .list .content .form .buttonBox input 
 {
@@ -736,6 +777,18 @@ section .list .content .form .buttonBox i
   transform: translateY(-7.5px);
   font-size: 0.8em;
   color: #fff;
+}
+    
+.service_time_input
+{
+  padding: 20px;
+  color: #000;
+  font-size: 1.8em;  
+  cursor: pointer;
+  width: 20vw;
+  height: 5vh;
+  margin: auto;
+  display: block;
 }
 
 }

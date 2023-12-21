@@ -44,7 +44,7 @@
         var e_service_time; //numerical value
         var e_service_ticks; //numerical value
         var edit_service_time; //input of the timepicker object
-
+/*
         function fill_list(data, label, list) {
             data[label].forEach((item) => {
                 let li = document.createElement("li");
@@ -58,6 +58,7 @@
                 list.appendChild(li);
             });
         }
+*/        
         function empty_lists(list) {
             list.forEach((item) => {
                 while (item.firstChild) {
@@ -112,9 +113,8 @@
             console.log(this.userID + " " + this.activityID);
 
             EditActivityPIC(this.userID, this.jobID,this.activityID, service_date, this.e_service_ticks, this.e_service_time, service_description.value);
-           // jobDateFormat = formatDate(this.jobDate);
-           // CheckJobsInDay(jobDateFormat);
-            goTo('add_hour_div', 'date_div');
+            CheckJobsInDay(service_date);
+            goTo('edit_activity_div', 'date_div');
         }
 
        function convertDate(date)
@@ -250,6 +250,7 @@
                     DownloadJobsPIC(answer, function (answer) {
                         let data = JSON.parse(answer);
                         let commesse_list = document.getElementById("commesseList");
+                        empty_list(commesse_list);
                         let row_index = 0;
                         data['jobList'].forEach((item) => {
                             //console.log(item);
@@ -327,7 +328,9 @@
                     <div class="buttonBox">
                         <input type="submit" id="btn_add" onclick="show('add_div')" value="Aggiungi">
                     </div>
-
+                    <div class="inputBox">
+                        <input type="submit" onclick="goTo('date_div','login_div')" value="Indietro">
+                    </div>
                 </div>
             </div>
         </div>
@@ -363,7 +366,7 @@
                         <input type="submit" id="btn_ip" onclick="SendAndBack()" value="Invia">
                     </div>
                     <div class="buttonBox">
-                        <input type="submit" id="btn_ip" onclick="goTo('edit_activity_div','add_div')" value="Annulla">
+                        <input type="submit" id="btn_ip" onclick="goTo('add_hour_div','date_div')" value="Indietro">
                     </div>
                 </div>
             </div>
@@ -384,7 +387,7 @@
                     </div>
                     <div class="service_time_div">
                         <label for="service_time">Immetti Ore:</label> 
-                        <input type="text" name="service_time" id="e_service_time"></input>
+                        <input class="service_time_input" type="text" name="service_time" id="e_service_time"></input>
                         <script>
                             tp.attach({
                                 target: edit_service_time = document.getElementById("e_service_time"),
@@ -417,13 +420,12 @@
         <div class="list" id="add_div" style="display:none;">
             <div class="content">
                 <h2>Scegli Commessa</h2>
-
                 <div class="form">
                     <div class="commesselist">
                         <ul id="commesseList"></ul>
-                    </div>
+                    </div> 
                     <div class="inputBox">
-                        <input type="submit" onclick="goTo('add_div','date_div')" value="Back">
+                        <input type="submit" onclick="goTo('add_div','date_div')" value="Indietro">
                     </div>
                 </div>
             </div>
